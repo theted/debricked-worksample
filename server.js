@@ -2,9 +2,13 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 const path = require('path')
+const cors = require('cors')
+const debricked = require('./models/debricked.js')
+const fileUpload = require('express-fileupload')
 const debug = require('debug')('app')
 const app = express()
 const config = { port: 4244 }
+require('dotenv').config()
 
 // set filesize limits
 app.use(bodyParser.json({ limit: '5mb' }));
@@ -13,33 +17,39 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
+// allow CORS
+app.use(cors())
+
+// enable files upload
+app.use(fileUpload({ createParentPath: true }))
+
+
 // serve static files
 app.use(express.static(path.join(__dirname, 'dist')))
 app.use(express.static(path.join(__dirname, 'src')))
 
 // receive file uploads in form of POST requests
 app.post('/upload', (req, res, next) => {
+  // Object.keys(req.body).forEach(key => console.log(key, '=>', req.body[key]))
 
-  let keys = Object.keys(req.body)
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.')
 
-  keys.forEach(key => {
-    console.log(key, '=>', req.body[key])
+  let file = req.files.data
+  file.mv('./uploads/' + file.name)
+
+  // send response / debugger
+  console.log({
+    status: true,
+    message: 'File is uploaded',
+    data: {
+      name: file.name,
+      mimetype: file.mimetype,
+      size: file.size
+    }
   })
 
-  // TODO: generate temp name
-  let { name, data } = req.body
-  let fileName = path.join(__dirname, 'input', name)
-
-  // write file
-  fs.writeFile(fileName, data, 'base64', function (err) {
-    if (err) console.log(err);
-
-    // TODO: send file to Debricked API endpoint
-    console.log('...done writing fi;e')
-
-  })
-
-  res.send('we do get your POST...!')
+  res.send('Upload complete: ' + file.name)
 })
 
 // serve index.html to all other GET requests
