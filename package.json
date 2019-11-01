@@ -1,0 +1,38 @@
+{
+  "name": "debricked-worksample",
+  "version": "1.0.0",
+  "description": "Debricked worksample",
+  "main": "server.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "start": "DEBUG=app node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theted/debricked-worksample.git"
+  },
+  "author": "Fredrik Sundberg <fredrik@sundbergmedia.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theted/debricked-worksample/issues"
+  },
+  "homepage": "https://github.com/theted/debricked-worksample#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "^4.17.1",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "cross-env": "^6.0.3",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
+    "vue-loader": "^15.7.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  }
+}
