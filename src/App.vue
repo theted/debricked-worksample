@@ -1,23 +1,19 @@
-<template>
-  <div id="wrapper">
-    {{ message }}
-  </div>
-</template>
+<template src="./App.pug" lang="pug"></template>
 
 <script>
+  import FileUpload from './components/file-upload/file-upload.vue'
+  import Tast from './components/Tast.vue' // ??
+  import Status from './components/status.vue'
+
   export default {
     name: 'app',
-    data() {
-      return {
-        message: 'Hello, Vue!'
-      }
-    },
-    computed: {
-    },
-    methods: {
-    },
-    mounted() {
+    components: {
+      FileUpload,
+      Tast,
+      Status
     }
   }
 
 </script>
+
+<style src="./App.styl" lang="stylus"></style>
