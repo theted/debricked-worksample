@@ -1,0 +1,26 @@
+#file-upload
+  .container
+    form#upload(enctype="multipart/form-data" novalidate v-if="isInitial || isSaving")
+      h1 Upload dependency file
+      p Upload file here for valid
+      .dropbox
+        input(type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept=".json,application/json").input-file
+        p(v-if="isInitial") Drag file here or click to browse ({{ count }})
+        p(v-if="isSaving") Uploading {{ fileCount }} files...
+     
+    #success(v-if="isSuccess")
+      h2 Uploaded {{ uploadedFiles.length }} file(s) successfully.
+      p
+        a(href="javascript:void(0)" @click="reset()") Upload again
+
+      //- TODO: fix!
+      ul.list-unstyled
+        li(v-for="item in uploadedFiles")
+          img(:src="item.url" :alt="item.originalName")
+          p {{item}}
+
+    #failed(v-if="isFailed")
+      h2 Uploaded failed
+      p
+        a(href="javascript:void(0)" @click="reset()") Try again
+      pre {{ uploadError }}
