@@ -1,9 +1,12 @@
 <template lang="pug">
   .status.animated.zoomIn(v-bind="data")
-    h2 Hello in progress
-    p {{ data.progress }}% completed
-    p {{ data.vulnerabilitiesFound }} vulnurbilities found ({{ data.unaffectedVulnerabilitiesFound }} unaffected)
-    span {{ data.detailsUrl }}
+    h2 {{ data.title }}
+    p 
+      strong {{ data.vulnerabilitiesFound }} 
+      | vulnurbilities found (
+      strong {{ data.unaffectedVulnerabilitiesFound }} 
+      | unaffected) 
+      a(v-bind:href="data.detailsUrl" target="_blank").button Show
     progressbar(v-bind="data")
 </template>
 
@@ -13,11 +16,11 @@
   import Progressbar from './Progressbar.vue'
 
   // TODO: move to global config!
-  const ENDPOINT = 'http://localhost:4244/status/14580'
+  const ENDPOINT = 'http://localhost:4244/status/'
 
   export default {
     name: 'status',
-    components: { // ! actually need to define component here to be able to use inte component !
+    components: {
       Progressbar
     },
     props: ['id'],
@@ -30,14 +33,19 @@
       getData() {
         var self = this
   
-        axios.get(ENDPOINT)
+        axios.get(ENDPOINT + this.id)
           .then(res => res.data)
           .then(res => {
+            
+            let id = res.detailsUrl.substring(res.detailsUrl.lastIndexOf('/') + 1)
+            res.title = 'Project #' + id
+
             self.data = res
+            console.log(res)
 
             // re-call if not coplete
             if(res.progress < 100) {
-              setTimeout(() => {self.getData()}, 3000)
+              setTimeout(() => {self.getData()}, 2000)
             }
 
           })
@@ -45,7 +53,6 @@
       }
     },
     mounted() {
-      // if(!this.data) this.data = {}
       this.getData()
     },
   }
