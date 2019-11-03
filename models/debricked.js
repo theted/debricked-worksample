@@ -75,6 +75,41 @@ const debrickedRequest = async (path, data = false, attempts = 0) => {
 }
 
 /**
+ * Upload file to Debricked API
+ * @param {string} file Path to file
+ * TODO: refactor!
+ */
+const uploadFile = async (filePath, fileName) => {
+  const url = 'https://seconds.debricked.com/api/1.0/open/uploads/dependencies/files'
+  const token = await ensureToken()
+  const form_data = new FormData()
+
+  // add file
+  form_data.append("fileData", fs.createReadStream(filePath))
+
+  // add fields
+  form_data.append('repositoryName', '2nother-test')
+  form_data.append('commitName', 'CommitName')
+
+  // prepare headers
+  let headers = form_data.getHeaders()
+  headers["Authorization"] = "bearer " + token
+  headers["Content-Type"] = "multipart/form-data"
+  headers["accept"] = "application/json"
+
+  // send requst to debricked API
+  return axios({
+    method: 'post',
+    processData: false,
+    contentType: 'multipart/form-data',
+    cache: false,
+    url: url,
+    data: form_data,
+    headers: headers
+  }).then(res => res.data).catch(err => console.log(err))
+}
+
+/**
  * Get status of an upload
  */
 const status = async (id) => debrickedRequest('ci/upload/status?ciUploadId=' + id)
@@ -84,4 +119,4 @@ const status = async (id) => debrickedRequest('ci/upload/status?ciUploadId=' + i
  */
 const supported = async () => debrickedRequest('supported/dependency/files')
 
-module.exports = { getToken, debrickedRequest, status, supported }
+module.exports = { getToken, debrickedRequest, uploadFile, status, supported }
