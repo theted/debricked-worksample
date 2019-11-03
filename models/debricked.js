@@ -5,6 +5,8 @@
 require('dotenv').config()
 
 const axios = require('axios')
+const fs = require('fs')
+const FormData = require('form-data')
 const version = '1.0'
 const endpoint = process.env.DEBRICKED_ENDPOINT
 const apiURL = endpoint + version + '/open/'
@@ -27,19 +29,24 @@ const getToken = async () => {
   return result.data.token
 }
 
+const renewToken = async () => {
+  let token = getToken()
+  currentToken = token
+  return token
+}
+
 /**
  * Ensure a valid token; renew if missing
  * TODO: optimize; add validation check
  */
 const ensureToken = async () => {
-  if (!currentToken) currentToken = await getToken()
-  return currentToken
+  return (currentToken) ? currentToken : renewToken()
 }
 
 /**
  * Wrapper for HTTP request to Debricked API
  */
-const debrickedRequest = async (path, data = false) => {
+const debrickedRequest = async (path, data = false, attempts = 0) => {
   let token = await ensureToken()
   let method = (data) ? 'post' : 'get'
   let url = apiURL + path
@@ -48,18 +55,22 @@ const debrickedRequest = async (path, data = false) => {
   // ! bit of a hax...
   axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
-  // TODO: support for query params, like;
-  // /ci/upload/status?ciUploadId=1090
-
   // debug
   console.log(' -> Debricked: get URL: ' + url, '-----------')
 
   return axios[method](url, data, config)
-    .then(res => {
-      return res.data // <- gotcha!
-    })
+    .then(res => res.data)
     .catch(error => {
-      console.error(error)
+      console.log('ERROR >> ', error.response.status)
+
+      // attempt to renew token on 401 errors
+      if (attempts < 1 && error.response.status === 401) {
+        return renewToken().then(debrickedRequest(path, data, ++attempts))
+      } else {
+        return 'ERROR: ' + error.response.status
+      }
+
+      return error
     })
 }
 
