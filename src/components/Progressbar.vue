@@ -7,22 +7,7 @@
 <script>
   export default {
     name: 'progressbar',
-    data() {
-      return {
-        progress: 30,
-      }
-    },
-    methods: {
-      setRandom() {
-        let self = this
-        let random = Math.floor(Math.random() * Math.floor(100))
-        this.progress = random
-        setTimeout(() => self.setRandom(), 3000 )
-      }
-    },
-    mounted() {
-      // this.setRandom()
-    },
+    props: ['progress']
   }
 </script>
 
@@ -35,5 +20,5 @@
     .inner
       padding: .4em 
       background: blue
-      transition: all 900ms ease-out
+      transition: all 1600ms ease-out
 </style>
