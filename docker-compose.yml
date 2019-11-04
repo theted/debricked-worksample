@@ -1,0 +1,8 @@
+web:
+  build: .
+  ports:
+  - "4244:4244"
+  environment:
+  - NODE_ENV=production
+  command: >
+    sh -c '/usr/local/bin/node ./server.js'
