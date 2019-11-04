@@ -7,29 +7,25 @@ require('dotenv').config()
 const axios = require('axios')
 const fs = require('fs')
 const FormData = require('form-data')
+const utils = require('./utils.js')
 const version = '1.0'
 const endpoint = process.env.DEBRICKED_ENDPOINT
 const apiURL = endpoint + version + '/open/'
-const authURL = endpoint + 'login_check'
-const username = process.env.DEBRICKED_USERNAME
-const password = process.env.DEBRICKED_PASSWORD
 let currentToken = false
 
 /**
  * Get a new token, using username/password as defined in `.env` file
  */
-// const getToken = async () => TOKEN
-const getToken = async () => {
-  let result = await axios.post(authURL, {
-    // ! gotcha with parameter names in this request
-    _username: username,
-    _password: password
-  })
+const getToken = async () => axios.post(endpoint + 'login_check', {
+  _username: process.env.DEBRICKED_USERNAME,
+  _password: process.env.DEBRICKED_PASSWORD
+}).then(res => res.data.token)
 
-  return result.data.token
-}
-
+/**
+ * Renew token
+ */
 const renewToken = async () => {
+  console.log(' > RENEW TOKEN')
   let token = getToken()
   currentToken = token
   return token
@@ -37,7 +33,6 @@ const renewToken = async () => {
 
 /**
  * Ensure a valid token; renew if missing
- * TODO: optimize; add validation check
  */
 const ensureToken = async () => {
   return (currentToken) ? currentToken : renewToken()
@@ -63,14 +58,10 @@ const debrickedRequest = async (path, data = false, attempts = 0) => {
     .catch(error => {
       console.log('ERROR >> ', error.response.status)
 
-      // attempt to renew token on 401 errors
-      if (attempts < 1 && error.response.status === 401) {
-        return renewToken().then(debrickedRequest(path, data, ++attempts))
-      } else {
-        return 'ERROR: ' + error.response.status
-      }
-
-      return error
+      // attempt to renew token on authorization errors
+      return (attempts < 1 && error.response.status === 401)
+        ? renewToken().then(debrickedRequest(path, data, ++attempts))
+        : 'ERROR: ' + error.response.status
     })
 }
 
@@ -80,15 +71,16 @@ const debrickedRequest = async (path, data = false, attempts = 0) => {
  * TODO: refactor!
  */
 const uploadFile = async (filePath, fileName) => {
-  const url = 'https://seconds.debricked.com/api/1.0/open/uploads/dependencies/files'
+  const url = apiURL + 'uploads/dependencies/files'
   const token = await ensureToken()
   const form_data = new FormData()
+  const repositoryName = 'Test@' + utils.timestamp()
 
   // add file
   form_data.append("fileData", fs.createReadStream(filePath))
 
   // add fields
-  form_data.append('repositoryName', '2nother-test')
+  form_data.append('repositoryName', repositoryName)
   form_data.append('commitName', 'CommitName')
 
   // prepare headers
