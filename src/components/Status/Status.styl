@@ -1,0 +1,29 @@
+.status
+  border: 1px solid lighten(#4D2DAD, 20%)
+  background: linear-gradient(darken(#4D2DAD, 1%), darken(#5047F0, 1%))
+  transition: background 1s ease-out
+  background-size:100% 200%
+  border-top: 0
+  padding: 1em
+  position: relative
+  &:hover, &:focus
+    background-position: 0 100%
+
+  .close
+    position: absolute
+    top: 0
+    right: 0
+    opacity: 0
+    font-size: 122%
+    font-weight: 900
+    padding: .5em
+    transition: opacity 450ms
+
+    &:hover
+      cursor: pointer
+
+
+.status
+  &:hover
+    .close
+      opacity: 1

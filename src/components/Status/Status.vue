@@ -3,17 +3,25 @@
     h2 {{ data.title }}
     p 
       strong {{ data.vulnerabilitiesFound }} 
-      | vulnurbilities found (
+      | vulnerabilities found (
       strong {{ data.unaffectedVulnerabilitiesFound }} 
       | unaffected) 
-      a(v-bind:href="data.detailsUrl" target="_blank").button Show
+      a(v-bind:href="data.detailsUrl" target="_blank").button View details
     progressbar(v-bind="data")
+    
+    div(style="position:relative;")
+      Spinner
+    
+    .close(@click="close")
+      | x
+
 </template>
 
 <script>
 
   import axios from 'axios'
-  import Progressbar from './Progressbar.vue'
+  import Progressbar from '../Progressbar/Progressbar.vue'
+  import Spinner from '../Spinner/Spinner.vue'
 
   // TODO: move to global config!
   const ENDPOINT = 'http://localhost:4244/status/'
@@ -21,7 +29,8 @@
   export default {
     name: 'status',
     components: {
-      Progressbar
+      Progressbar,
+      Spinner
     },
     props: ['id'],
     data() {
@@ -37,7 +46,7 @@
           .then(res => res.data)
           .then(res => {
             
-            let id = res.detailsUrl.substring(res.detailsUrl.lastIndexOf('/') + 1)
+            let id = 123 // res.detailsUrl.substring(res.detailsUrl.lastIndexOf('/') + 1)
             res.title = 'Project #' + id
 
             self.data = res
@@ -45,11 +54,24 @@
 
             // re-call if not coplete
             if(res.progress < 100) {
-              setTimeout(() => {self.getData()}, 2000)
+              setTimeout(() => {self.getData()}, 1000)
             }
 
           })
           .catch(err => {console.error('ERR!', err)})
+      },
+      close() {
+        console.log('Close elem:', this.id)
+
+        // TODO; add animation!
+        // TODO: remove from localStorage
+        setTimeout(() => {
+
+        }, 500)
+        
+        
+        this.$destroy() // destroy the vue listeners, etc
+        this.$el.parentNode.removeChild(this.$el) // remove the element from the DOM
       }
     },
     mounted() {
@@ -59,5 +81,4 @@
 
 </script>
 
-<style lang="stylus">
-</style>
+<style lang="stylus" src="./Status.styl"></style>

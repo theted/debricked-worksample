@@ -3,13 +3,12 @@
 <script>
   import Vue from 'vue'
   import FileUpload from './components/file-upload/file-upload.vue'
-  import Tast from './components/Tast.vue' // ??
-  import Status from './components/status.vue'
-  import Config from './components/Config.vue'
+  import Status from './components/Status/Status.vue'
+  import Config from './components/Config/Config.vue'
   import axios from 'axios'
 
   // dummy/default projects
-  let current = [1360, 1390]
+  let current = [15137, 15106, 15088]
 
   // helper function; create vue component
   const createItem = (type, data, el = 'app') => {
@@ -23,7 +22,6 @@
     name: 'app',
     components: {
       FileUpload,
-      Tast,
       Status,
       Config
     },
@@ -34,7 +32,7 @@
     },
     mounted() {
       // get current item from storage, create a `status` element for each
-      let defaultItems = [1360, 1960]
+      let defaultItems = current
       this.current = (localStorage.current) ? localStorage.current : defaultItems
       this.current.map(this.createItem)
     }
@@ -43,3 +41,4 @@
 </script>
 
 <style src="./App.styl" lang="stylus"></style>
+<style src="./style/style.styl" lang="stylus"></style>
