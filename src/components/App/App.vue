@@ -2,9 +2,9 @@
 
 <script>
   import Vue from 'vue'
-  import FileUpload from './components/file-upload/file-upload.vue'
-  import Status from './components/Status/Status.vue'
-  import Config from './components/Config/Config.vue'
+  import FileUpload from '../file-upload/file-upload.vue'
+  import Status from '../Status/Status.vue'
+  import Config from '../Config/Config.vue'
   import axios from 'axios'
 
   // dummy/default projects
@@ -41,4 +41,4 @@
 </script>
 
 <style src="./App.styl" lang="stylus"></style>
-<style src="./style/style.styl" lang="stylus"></style>
+<style src="../../style/style.styl" lang="stylus"></style>
