@@ -96,5 +96,3 @@
   }
 
 </script>
-
-<style src="../../App.styl" lang="stylus"></style>

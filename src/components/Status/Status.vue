@@ -22,9 +22,7 @@
   import axios from 'axios'
   import Progressbar from '../Progressbar/Progressbar.vue'
   import Spinner from '../Spinner/Spinner.vue'
-
-  // TODO: move to global config!
-  const ENDPOINT = 'http://localhost:4244/status/'
+  import config from '../../config.js'
 
   export default {
     name: 'status',
@@ -42,7 +40,7 @@
       getData() {
         var self = this
   
-        axios.get(ENDPOINT + this.id)
+        axios.get(config.endpoint + 'status/' + this.id)
           .then(res => res.data)
           .then(res => {
             

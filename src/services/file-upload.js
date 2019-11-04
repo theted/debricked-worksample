@@ -1,10 +1,8 @@
 import * as axios from 'axios'
-
-// TODO: move hard-coded endpoint to common config file!
-const ENDPOINT = 'http://localhost:4244/upload'
+import config from '../config.js'
 
 function upload(formData) {
-    return axios.post(ENDPOINT, formData)
+    return axios.post(config.endpoint + 'upload', formData)
         .then(data => {
             return data
         })
