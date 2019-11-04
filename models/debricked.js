@@ -102,6 +102,11 @@ const uploadFile = async (filePath, fileName) => {
 }
 
 /**
+ * Conclude conclude file(s) upload
+ */
+const concludeUpload = async (uploadId) => debrickedRequest('finishes/dependencies/files/uploads', { ciUploadId: uploadId })
+
+/**
  * Get status of an upload
  */
 const status = async (id) => debrickedRequest('ci/upload/status?ciUploadId=' + id)
@@ -111,4 +116,4 @@ const status = async (id) => debrickedRequest('ci/upload/status?ciUploadId=' + i
  */
 const supported = async () => debrickedRequest('supported/dependency/files')
 
-module.exports = { getToken, debrickedRequest, uploadFile, status, supported }
+module.exports = { getToken, debrickedRequest, uploadFile, concludeUpload, status, supported }
