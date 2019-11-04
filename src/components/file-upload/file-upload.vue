@@ -2,12 +2,33 @@
 
 <script>
 
+  import Vue from 'vue'
   import { upload } from '../../services/file-upload.js';   // real service
+  import * as utils from '../../services/utils.js'
+
+  // ! temp !
+  import Status from '../Status/Status.vue'
+  const createItem = (type, data, el = 'app') => {
+    const MyComponent = Vue.extend(type)
+    const component = new MyComponent({propsData: data}).$mount()
+    document.getElementById(el).appendChild(component.$el)
+    return component
+  }
+  
+  console.log(' >> UTILS:', utils)
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
+  const ALLOWED_MIMES = [
+    'application/json',
+    'text/plaintext'
+  ]
 
   export default {
     name: 'file-upload',
+    // ! temp !
+    components: {
+      Status
+    },
     data() {
       return {
         uploadedFiles: [],
@@ -38,10 +59,17 @@
           .then(x => {
             this.uploadedFiles = [].concat(x);
             this.currentStatus = STATUS_SUCCESS;
+
+            // emit events / create item
+            console.log('UPLOAD EVENT:', x)
+            this.$emit('upload', x.data)
+            this.createItem(x.data.ciUploadId)
           })
           .catch(err => {
             this.uploadError = err.response;
             this.currentStatus = STATUS_FAILED;
+            console.log('UPLOAD ERROR')
+            console.log(err)
           })
       },
       filesChange(fieldName, fileList) {
@@ -56,6 +84,10 @@
           })
 
         this.save(formData)
+      },
+      // ! temp !
+      createItem(id) {
+        createItem(Status, {id})
       }
     },
     mounted() {

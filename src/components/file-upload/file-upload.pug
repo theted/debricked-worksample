@@ -3,7 +3,7 @@
     form#upload(enctype="multipart/form-data" novalidate v-if="isInitial || isSaving")
       .dropbox
         input(type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept=".json,application/json").input-file
-        p(v-if="isInitial") Drag file here or click to browse ({{ count }})
+        p(v-if="isInitial") Drag file(s) here, or click to browse
         p(v-if="isSaving") Uploading {{ fileCount }} files...
      
     #success(v-if="isSuccess")
