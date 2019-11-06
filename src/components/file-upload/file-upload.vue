@@ -15,6 +15,9 @@
     return component
   }
   
+  import Storage from '../../services/storage.js'
+  const Store = new Storage()
+
   console.log(' >> UTILS:', utils)
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -64,6 +67,11 @@
             console.log('UPLOAD EVENT:', x)
             this.$emit('upload', x.data)
             this.createItem(x.data.ciUploadId)
+
+            // append item to localstorage
+            let current = Store.getJSON('current')
+            current.push(x.data.ciUploadId)
+            Store.setJSON('current', current)
           })
           .catch(err => {
             this.uploadError = err.response;

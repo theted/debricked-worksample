@@ -6,7 +6,7 @@
       | vulnerabilities found (
       strong {{ data.unaffectedVulnerabilitiesFound }} 
       | unaffected) 
-      a(v-bind:href="data.detailsUrl" target="_blank").button View details
+      a(v-bind:href="data.detailsUrl" target="_blank").button Details
     progressbar(v-bind="data")
     
     div(style="position:relative;")
@@ -23,6 +23,11 @@
   import Progressbar from '../Progressbar/Progressbar.vue'
   import Spinner from '../Spinner/Spinner.vue'
   import config from '../../config.js'
+
+  // ! TODO; remove Storage dependency; emit event to parent instead
+  import Storage from '../../services/storage.js'
+  const Store = new Storage()
+
 
   export default {
     name: 'status',
@@ -60,9 +65,11 @@
       },
       close() {
         console.log('Close elem:', this.id)
-
+        let vals = Store.getJSON('current')        
+        vals = vals.filter(item => item !== this.id)
+        Store.setJSON('current', vals)
+        
         // TODO; add animation!
-        // TODO: remove from localStorage
         setTimeout(() => {
 
         }, 500)

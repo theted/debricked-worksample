@@ -6,9 +6,13 @@
   import Status from '../Status/Status.vue'
   import Config from '../Config/Config.vue'
   import axios from 'axios'
+  import Storage from '../../services/storage.js'
+
+  const Store = new Storage()
 
   // dummy/default projects
-  let current = [15137, 15106, 15088]
+  // const current = [15137, 15106, 15088]
+  const current = [15281, 1360]
 
   // helper function; create vue component
   const createItem = (type, data, el = 'app') => {
@@ -32,8 +36,14 @@
     },
     mounted() {
       // get current item from storage, create a `status` element for each
-      let defaultItems = current
-      this.current = (localStorage.current) ? localStorage.current : defaultItems
+      // let defaultItems = current
+      let items = Store.getJSON('current')
+      this.current = (items) ? items : defaultItems
+
+      // console.log('wut' items)
+      console.log('Have current:', this.current)
+
+      console.log('Whatthe', items)
       this.current.map(this.createItem)
     }
   }
