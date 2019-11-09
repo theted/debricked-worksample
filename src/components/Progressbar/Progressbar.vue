@@ -1,7 +1,10 @@
 <template lang="pug">
-  .progressbar
-    .inner(v-bind:style="{ width: progress + '%' }")
+  .progressbar(v-if="progress < 100")
+    .inner(v-if="progress > -1" v-bind:style="{ width: progress + '%' }")
       p {{ progress }}% completed
+    .inner.waiting(v-if="progress === -1")
+      p Waiting in queue...
+
 </template>
 
 <script>
