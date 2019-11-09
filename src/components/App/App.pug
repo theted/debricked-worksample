@@ -1,11 +1,11 @@
-#app
+#app(v-bind:class="[theme]")
   h1 Vulnerability checker
   p Scan for vulnerabilities - Upload a package file & check it according to latest spec.
 
   file-upload
 
-  Config
+  Config(@theme_update="setTheme")
 
   footer
     p Powered by 
-      a(href="https://debicked.com" target="_blank") debricked
+      a(href="https://debricked.com" target="_blank") debricked

@@ -1,37 +1,46 @@
 <template lang="pug">
   .config(v-bind:class="{ active: expanded }")
-    a(href="#" @click="toggleActive")
+    a.switch(href="#" @click="toggleActive")
 
     .wrap(v-bind:class="{ hidden: !expanded }")
       .field
-        h4 Text size
-        // TODO: increase or decrease
+        h3 Text size
+        input(type="number" min="12" max="34" value="fontSize")
 
       .field
-        h4 Theme
-        // TODO: set dark or light theme, maybe background?
-        // TODO: maybe custom colorz?
-        a.box(href="#" @click="setTheme(wat)")
+        h3 Theme
+        .theme(v-for="item in themes")
+          a(@click="setTheme" href="#") {{item}}
 
+      .field
+        a(@click="doStuff" href="#") Yesh!
 </template>
 
 <script>
-  export default {
-    name: 'config',
-    data() {
-      return {
-        expanded: false,
-      }
+export default {
+  name: "config",
+  data() {
+    return {
+      expanded: false,
+      themes: ['light', 'dark', 'alt'],
+      fontSize: 12
+    }
+  },
+  methods: {
+    toggleActive() {
+      this.expanded = !this.expanded
     },
-    methods: {
-      toggleActive() { this.expanded = !this.expanded },
-      setTheme(theme) {
-        console.log('Set them ->', theme)
-      }
+    doStuff(event) {
+      this.$emit("event_child", event.target.innerText)
     },
-    mounted() {
-    },
+    setTheme(event) {
+      this.$emit("theme_update", event.target.innerText)
+    }
+  },
+  mounted() {
+    console.log("In config?")
   }
+}
 </script>
 
 <style lang="stylus" src="./Config.styl"></style>

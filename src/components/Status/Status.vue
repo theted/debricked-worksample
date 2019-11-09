@@ -44,16 +44,15 @@
     methods: {
       getData() {
         var self = this
-  
+
         axios.get(config.endpoint + 'status/' + this.id)
           .then(res => res.data)
           .then(res => {
             
             let id = 123 // res.detailsUrl.substring(res.detailsUrl.lastIndexOf('/') + 1)
-            res.title = 'Project #' + id
+            res.title = 'Project #' + this.id
 
             self.data = res
-            console.log(res)
 
             // re-call if not coplete
             if(res.progress < 100) {
@@ -74,7 +73,7 @@
 
         }, 500)
         
-        
+
         this.$destroy() // destroy the vue listeners, etc
         this.$el.parentNode.removeChild(this.$el) // remove the element from the DOM
       }
