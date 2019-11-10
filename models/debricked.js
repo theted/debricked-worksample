@@ -70,18 +70,22 @@ const debrickedRequest = async (path, data = false, attempts = 0) => {
  * @param {string} file Path to file
  * TODO: refactor!
  */
-const uploadFile = async (filePath, fileName) => {
+const uploadFile = async (filePath, repositoryName, commitName = "Commit name", ciUploadId) => {
   const url = apiURL + 'uploads/dependencies/files'
   const token = await ensureToken()
   const form_data = new FormData()
-  const repositoryName = 'Test@' + utils.timestamp()
+
+  // generate a repository name if missing
+  if (!repositoryName) repositoryName = 'Test@' + utils.timestamp()
 
   // add file
   form_data.append("fileData", fs.createReadStream(filePath))
 
   // add fields
   form_data.append('repositoryName', repositoryName)
-  form_data.append('commitName', 'CommitName')
+  form_data.append('commitName', commitName)
+
+  if (ciUploadId) { form_data.append('ciUploadId', ciUploadId) }
 
   // prepare headers
   let headers = form_data.getHeaders()

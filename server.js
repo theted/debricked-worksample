@@ -12,6 +12,52 @@ const config = { port: 4244 }
 
 require('dotenv').config()
 
+/**
+ * Upload file(s) to debrickd API
+ */
+const uploadFiles = async files => {
+  let uploadResult = false
+  let allResults = []
+
+  let output = {
+    status: true,
+    files: []
+  }
+
+  for (let file of files) {
+    let fullName = __dirname + '/uploads/' + file.name
+    let name = ''
+
+    // move the file 
+    file.mv('./uploads/' + file.name)
+
+    // read JSON, set name of repository
+    if (file.name.split('.')[1] == 'json') {
+      let jsonData = await JSON.parse(file.data)
+      name = jsonData.name
+    } else {
+      name = 'noname'
+    }
+
+    output.files.push({
+      name: name,
+      mimetype: file.mimetype,
+      size: file.size
+    })
+
+    // .. if we have previous arr
+    let ciUploadId = (allResults.length > 0)
+      ? allResults[0].ciUploadId
+      : false
+
+    // now that we have saved file locally, send it to Debricked API
+    uploadResult = await debricked.uploadFile(fullName, name, file.name, ciUploadId)
+    allResults.push(uploadResult)
+  }
+
+  return { output, allResults }
+}
+
 // set filesize limits
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({
@@ -23,7 +69,7 @@ app.use(bodyParser.urlencoded({
 app.use(cors())
 
 // enable files upload
-app.use(fileUpload({ createParentPath: true }))
+app.use(fileUpload({ createParentPath: true, debug: true }))
 
 // serve static files
 app.use(express.static(path.join(__dirname, 'dist')))
@@ -36,35 +82,20 @@ app.post('/upload', async (req, res, next) => {
   if (!req.files)
     return res.status(400).send('No files were uploaded.')
 
-  // get file name
-  let file = req.files.data
-  let fullName = __dirname + '/uploads/' + file.name
+  let files = req.files.data
 
-  // move the file 
-  // TODO; read JSON, set name of repository
-  file.mv('./uploads/' + file.name)
+  if (!Array.isArray(files)) files = [files]
+  console.log(typeof files)
 
-  let output = {
-    status: true,
-    message: 'File is uploaded',
-    data: {
-      name: file.name,
-      mimetype: file.mimetype,
-      size: file.size
-    }
-  }
-
-  // now that we have saved file locally, send it to Debricked API
-  let uploadResult = await debricked.uploadFile(fullName)
+  let uploadResult = false
+  let { output, allResults } = await uploadFiles(files)
 
   // conclude the upload
-  // TODO: add support for adding multiple files before conclude...
-  let concludeResult = await debricked.concludeUpload(uploadResult.ciUploadId)
+  let concludeResult = await debricked.concludeUpload(allResults[0].ciUploadId)
 
   // append result to output
-  output.ciUploadId = uploadResult.ciUploadId
-  output.uploadProgramsFileId = uploadResult.uploadProgramsFileId
-  output.concludeResult = concludeResult // <- temp
+  output.ciUploadId = allResults[0].ciUploadId
+  output.uploadProgramsFileId = allResults[0].uploadProgramsFileId
 
   res.send(output)
 })
