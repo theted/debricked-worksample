@@ -2,17 +2,9 @@
   .container
     form#upload(enctype="multipart/form-data" novalidate)
       .dropbox(:class="[dragging ? 'dropzone-over' : '']" @dragenter="dragging=true" @dragleave="dragging=false")
-        input(type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept=".json,application/json").input-file
+        input(type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length").input-file
         p(v-if="isInitial") Drag file(s) here, or click to browse
         p(v-if="isSaving") Uploading {{ fileCount }} files...
-     
-    #success(v-if="isSuccess")
-      h2 Uploaded {{ uploadedFiles.length }} file(s) successfully.
-      p
-        a(href="javascript:void(0)" @click="reset()") Upload again
-
-      //- ul#results
-      //-   li(v-for="item in uploadedFiles") {{item}}
 
     #failed(v-if="isFailed")
       h2 Uploaded failed

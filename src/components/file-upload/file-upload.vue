@@ -71,6 +71,8 @@
             let current = Store.getJSON('current')
             current.push(x.data.ciUploadId)
             Store.setJSON('current', current)
+
+            this.reset()
           })
           .catch(err => {
             this.uploadError = err.response;
