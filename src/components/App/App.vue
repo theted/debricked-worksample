@@ -10,9 +10,6 @@
 
   const Store = new Storage()
 
-  // dummy/default projects
-  const defaultItems = [15281, 1360]
-
   // helper func create vue component
   const createItem = (type, data, el = "app") => {
     const MyComponent = Vue.extend(type)
@@ -34,7 +31,6 @@
         fontSize: 10
       }
     },
-    // props: ['fontSize'],
     methods: {
       createItem(id) {
         createItem(Status, { id })
@@ -47,16 +43,11 @@
 
         // bit of a hax to set class on body
         let classList = document.querySelector('body').classList
-
-        while (classList.length > 0) {
-          classList.remove(classList.item(0))
-        }
-    
+        while (classList.length > 0) { classList.remove(classList.item(0))}
         classList.add(newTheme)
-
       },
       setFontSize(fontSize) {
-        console.log('sett font size', fontSize)
+        console.log('Set font size:', fontSize)
         this.fontSize = fontSize
         Store.set('fontSize', fontSize)
       }
@@ -70,7 +61,7 @@
 
       // get current item from storage, create a `status` element for each
       let items = Store.getJSON("current")
-      this.current = items ? items : defaultItems
+      this.current = items ? items : []
       this.current.map(this.createItem)
     }
   }
