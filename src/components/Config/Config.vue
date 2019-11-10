@@ -32,9 +32,6 @@ export default {
     setTheme(event) {
       this.$emit("theme_update", event.target.innerText)
     },
-  },
-  mounted() {
-    console.log("In config?")
   }
 }
 </script>

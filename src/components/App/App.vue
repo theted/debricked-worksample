@@ -36,6 +36,8 @@
         createItem(Status, { id })
       },
       setTheme(newTheme) {
+        if(!newTheme) return false
+
         newTheme = newTheme.toLowerCase()
         console.log("Set theme:", newTheme)
         this.theme = newTheme
