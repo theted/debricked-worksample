@@ -11,8 +11,7 @@
   const Store = new Storage()
 
   // dummy/default projects
-  // const current = [15137, 15106, 15088]
-  const current = [15281, 1360]
+  const defaultItems = [15281, 1360]
 
   // helper func create vue component
   const createItem = (type, data, el = "app") => {
@@ -31,26 +30,45 @@
     },
     data() {
       return {
-        theme: 'alt'
+        theme: 'alt',
+        fontSize: 10
       }
     },
+    // props: ['fontSize'],
     methods: {
       createItem(id) {
         createItem(Status, { id })
       },
-      setTheme(e) {
-        e = e.toLowerCase()
-        console.log("Set theme:", e)
-        this.theme = e
-        Storage.set('theme', e)
+      setTheme(newTheme) {
+        newTheme = newTheme.toLowerCase()
+        console.log("Set theme:", newTheme)
+        this.theme = newTheme
+        Store.set('theme', newTheme)
+
+        // bit of a hax to set class on body
+        let classList = document.querySelector('body').classList
+
+        while (classList.length > 0) {
+          classList.remove(classList.item(0))
+        }
+    
+        classList.add(newTheme)
+
+      },
+      setFontSize(fontSize) {
+        console.log('sett font size', fontSize)
+        this.fontSize = fontSize
+        Store.set('fontSize', fontSize)
       }
     },
     mounted() {
       // get current theme from localStorage
-      this.theme = Store.get('theme')
+      this.setTheme(Store.get('theme'))
       
+      // . also get fontSize
+      this.fontSize = Store.get('fontSize') || 10
+
       // get current item from storage, create a `status` element for each
-      // let defaultItems = current
       let items = Store.getJSON("current")
       this.current = items ? items : defaultItems
       this.current.map(this.createItem)

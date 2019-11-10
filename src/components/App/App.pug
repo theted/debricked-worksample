@@ -1,10 +1,10 @@
-#app(v-bind:class="[theme]")
+#app(v-bind:class="[theme]" v-bind:style="{ 'font-size': fontSize * 2 + 'px' }")
   h1 Vulnerability checker
-  p Scan for vulnerabilities - Upload a package file & check it according to latest spec.
+  p Upload a <strong>package file</strong> to scan for known vulnerabilities.
 
   file-upload
 
-  Config(@theme_update="setTheme")
+  Config(@theme_update="setTheme" @set_font_size="setFontSize")
 
   footer
     p Powered by 
