@@ -13,11 +13,14 @@
 
     a.switch
       position relative
-      left: -30px
-      background-image: url('/src/img/cog.svg')
+      left: -36px
+      top: 6px
+      background-image: url('/img/cog.svg')
       background-size: contain
       background-repeat: no-repeat
       padding: 0 1em
+      &:hover
+        filter: invert(1)  
 
     .wrap
       position: relative
@@ -27,8 +30,6 @@
     background: #333
     transform: translateX(0px)
 
-
 .box, .field
-  border: 1px solid red
   padding: .5em
   width: 100%

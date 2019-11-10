@@ -6,6 +6,7 @@ body
   min-height: 100vh
   align-items: center
   justify-content: center
+  transition: background 600ms, color 600ns
 
 #app
   width: 100%
@@ -15,8 +16,20 @@ body
 .status
   display: relative
 
-.theme-1
+/**
+ * Themes
+ */
+
+.alt
   background: linear-gradient(to right, #0f2027, #203a43, #2c5364)
 
-.theme-2
+.dark
   background: linear-gradient(-45deg, #ad5389, #3c1053)
+
+
+// theme styling
+.wut, .wat, .alt
+  background: blue
+
+  .status
+    background: green
