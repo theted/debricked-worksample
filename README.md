@@ -4,9 +4,13 @@ Simple package vulnerability checker, powered by [Debricked] public API.
 Public site: https://debricked.sundbergmedia.com
 
 ## Building
-Build & start Docker image by simply calling the `build.sh` script. Default port is `4244`.
+Simply run `docker-compose up` to build & start a Docker container. Default port is `4244`.
 
-It is also possible to build and start the docker image manualy by issuing the following commands:
+A Docker container build script is also available in `build.sh`.
+
+
+
+It is also possible to build and start the docker image *manually* by issuing the following commands:
 
 ```sh
 # build the image
