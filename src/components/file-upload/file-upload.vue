@@ -69,6 +69,9 @@
             
             // append item to localstorage
             let current = Store.getJSON('current')
+
+            if(!current || !current.length) current = []
+            
             current.push(x.data.ciUploadId)
             Store.setJSON('current', current)
 
