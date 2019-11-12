@@ -3,6 +3,14 @@ Simple package vulnerability checker, powered by [Debricked] public API.
 
 Public site: https://debricked.sundbergmedia.com
 
+## Configuration
+Edit the `.env` file, set your username & password for Debricked API
+
+```
+DEBRICKED_USERNAME=username
+DEBRICKED_PASSWORD=password
+```
+
 ## Building
 Call the build script `build.sh` to build & start a Docker container. Default port is `4244`.
 
