@@ -27,7 +27,7 @@ export default {
       this.expanded = !this.expanded
     },
     setFontSize(event) {
-      this.$emit("set_font_size", event.target.innerText)
+      this.$emit("set_font_size", event.target.value)
     },
     setTheme(event) {
       this.$emit("theme_update", event.target.innerText)
