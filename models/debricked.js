@@ -26,7 +26,7 @@ const getToken = async () => axios.post(endpoint + 'login_check', {
  */
 const renewToken = async () => {
   console.log(' > RENEW TOKEN')
-  let token = getToken()
+  let token = await getToken()
   currentToken = token
   return token
 }
