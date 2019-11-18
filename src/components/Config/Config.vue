@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       expanded: false,
-      themes: ['light', 'dark', 'alt'],
+      themes: ['default', 'light', 'dark', 'alt'],
       fontSize: 12
     }
   },
